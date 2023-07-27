@@ -1,21 +1,21 @@
 ---
-apiVersion: codemowers.io/v1alpha1
-kind: GeneratedSecret
+apiVersion: codemowers.cloud/v1beta1
+kind: SecretClaim
 metadata:
   name: mongodb-application-readwrite-password
 spec:
   mapping:
     - key: password
-      value: "%(password)s"
+      value: "%(plaintext)s"
 ---
-apiVersion: codemowers.io/v1alpha1
-kind: GeneratedSecret
+apiVersion: codemowers.cloud/v1beta1
+kind: SecretClaim
 metadata:
   name: mongodb-application-readonly-password
 spec:
   mapping:
     - key: password
-      value: "%(password)s"
+      value: "%(plaintext)s"
 ---
 apiVersion: mongodbcommunity.mongodb.com/v1
 kind: MongoDBCommunity
@@ -27,7 +27,7 @@ spec:
       quiet: true
   members: 3
   type: ReplicaSet
-  version: "5.0.9"
+  version: "6.0.8"
   security:
     authentication:
       modes: ["SCRAM"]
