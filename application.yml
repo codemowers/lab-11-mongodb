@@ -67,7 +67,7 @@ spec:
         - metadata:
             name: logs-volume
           spec:
-            storageClassName: openebs-hostpath
+            storageClassName: mongo
             accessModes:
             - ReadWriteOnce
             resources:
@@ -76,7 +76,7 @@ spec:
         - metadata:
             name: data-volume
           spec:
-            storageClassName: openebs-hostpath
+            storageClassName: mongo
             accessModes:
             - ReadWriteOnce
             resources:
