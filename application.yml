@@ -132,10 +132,9 @@ kind: Ingress
 metadata:
   name: mongoexpress
   annotations:
-    kubernetes.io/ingress.class: traefik
+    kubernetes.io/ingress.class: shared
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-    external-dns.alpha.kubernetes.io/target: traefik-laurivosandi-sk992.codemowers.ee
 spec:
   rules:
   - host: mongoexpress-laurivosandi-sk992.codemowers.ee
@@ -151,3 +150,33 @@ spec:
   tls:
   - hosts:
     - "*.codemowers.ee"
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongoimport
+spec:
+  template:
+    spec:
+      volumes:
+        - name: scripts
+          configMap:
+            name: scripts
+      containers:
+        - name: create-table
+          image: docker.io/library/mongo:6.0.8
+          command:
+            - /bin/bash
+            - -c
+            - 'mongoimport $MONGO_URI /scripts/inventory.json'
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-application-readwrite
+                  key: connectionString.standard
+      restartPolicy: Never
+  backoffLimit: 4
